@@ -138,8 +138,8 @@ Assembler
 - Birim zamanda (clock cycle) sadece 1 komut gerçekleştirilir.
 - C/C++ Kodu: a= b + c + d + e;
 ($s0, $s1, $s2, $s3, $s4 register'ları sırasıyla A,B,C,D değerlerini içeriyor kabul edelim)
- ```MIPS Kodu:
-
+ ```
+MIPS Kodu:
 add  $t0, $s1, $s2
 add  $t1, $t0, $s3
 add  $s0, $t1, $s4
