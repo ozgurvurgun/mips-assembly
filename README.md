@@ -126,11 +126,11 @@ Assembler
 	4. İkinci işlenen veri(operand)
 - Operand sayısı esnetilemez!!
 - C/C++ Kodu: a = b + c;
-- ```
+```
               kaynak
                 ↑
  MIPS Kodu: add a, b, c   → 000000 01001 01010 01000 00000 100000  
-              ↓       ↓
+              ↓      ↓
             işlem  operandlar
 ```
 - !! a, b ve c birer register
@@ -138,15 +138,14 @@ Assembler
 - Birim zamanda (clock cycle) sadece 1 komut gerçekleştirilir.
 - C/C++ Kodu: a= b + c + d + e;
 ($s0, $s1, $s2, $s3, $s4 register'ları sırasıyla A,B,C,D değerlerini içeriyor kabul edelim)
-    - ```
-MIPS Kodu:
+ ```MIPS Kodu:
+
 add  $t0, $s1, $s2
 add  $t1, $t0, $s3
 add  $s0, $t1, $s4
-    ```
-    - (add toplama komutu 2 adet operand alabilir)
-    
 
+(add toplama komutu 2 adet operand alabilir)
+```
 ## Operand Türleri ve Aritmetik MIPS Komutları
 
 1. REGISTER
