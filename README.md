@@ -126,7 +126,7 @@ Assembler
 	4. İkinci işlenen veri(operand)
 - Operand sayısı esnetilemez!!
 - C/C++ Kodu: a = b + c;
-```
+```php
               kaynak
                 ↑
  MIPS Kodu: add a, b, c   → 000000 01001 01010 01000 00000 100000  
@@ -138,7 +138,7 @@ Assembler
 - Birim zamanda (clock cycle) sadece 1 komut gerçekleştirilir.
 - C/C++ Kodu: a= b + c + d + e;
 ($s0, $s1, $s2, $s3, $s4 register'ları sırasıyla A,B,C,D değerlerini içeriyor kabul edelim)
- ```
+```php
 MIPS Kodu:
 add  $t0, $s1, $s2
 add  $t1, $t0, $s3
@@ -167,4 +167,68 @@ add  $s0, $t1, $s4
     - RISC mimarileri donanımı olabildiğince basit tutmayı hedefler.
     - Register "$" işareti ile tanımlanır.
     - Derleyiciler Register'ları kullanarak derleme işlemi yapar.
-    
+
+| isim         | Adres Değeri   | Kullanım                                |
+|:------------:|:--------------:|:---------------------------------------:|
+| $zero        |  0             | Sabit 0 değeri                          |
+| $at          |  1             | Assembler için ayrılmıştır              |
+| $v0 - $v1    |  2-3           | Sub-routine sonuç register              |
+| $a0 - a3     |  4-7           | Sub-routine argümanlar                  |
+| $t0 - $t9    |  8-15 , 24-25  | Geçici işlem parametreleri (temporaries)|
+| $s0 - $s7    |  16-23         | Kaydedilmiş parametreler                |   
+| $k0 - $k1    |  26-27         | İşletim sistemi kernel için ayrılmıştır |
+| $gp          |  28            | Global pointer                          |
+| $sp          |  29            | Stack pointer                           |
+| $fp          |  30            | Frame pointer                           |
+| $ra          |  31            | Return address                          | 
+
+## Toplama / Çıkarma Komutları 
+
+- add : operand1 ve operand2 parametrelerini toplayıp source parametresine yazar.
+- sub : operand1 ve operand2 parametrelerini çıkarıp source parametresine yazar.
+- örnek
+  - C/C++ Kodu: f = (g + h) - (i + j); ($s0, $s1, $s2, $s3, $s4 register'ları sırasıyla f,g,h,i,j değerlerini içeriyor kabul edelim)
+```php
+MIPS Kodu:
+add  $t0, $s1, $s2  # t0 = g + h
+add  $t1, $s3, $s4  # t1 = i + j
+sub  $s0, $t0, $t1  # f = (g+h) - (i+j)
+```
+
+## 2 - Tam Sayı
+
+- Register ve belleğin getirdiği okuma/yazma yükünü kaldırmak için kullanılır.
+  - Kural-3: Çok kullanılanı hızlı yap.
+- Sabit bir sayı doğrudan aritmetik işlemde operand olarak kullanılabilir.
+- Tam sayı kullanımı için özel MIPS komutu vardır.
+  - addi (add immediate)
+  - örnek
+```php
+addi  $s3, $s3, 4  # $s3'de bulunan değere 4 ekleyip $s3'e geri kaydeder.
+```
+- MIPS Assembly kodlamada tam sayılar ondalık, 16'lık (hexadecimal) veya 8'lik (octal) sayı tabanında ifade edilebilir.
+- Tam sayılar makine kodunda 32-bit'e dönüştürülerek ifade edilir.
+- Sayılar negatif olabilir (signed).
+
+## 3 - Bellek
+
+- Yapı olarak tek boyutlu bir array gibidir.
+- Her bellek satırının kendine özel bir bellek adresi vardır.
+- Bellekteki veriye erişebilmek için, komutlar mutlaka bellek adresini belirtmek zorundadır!
+- Bellekte hem komutlar hem de veriler saklanır.
+  - Bellekte kendilerine ayrılmış bölümlerde saklanabilirler, birbirlerinin yerini işgal etmezler (Memomry Organization).
+
+## Register / Bellek Karşılaştırması
+
+- Aritmetik / Mantık komutlarının operandları register'dan gelmek zorundadır.
+- Tipik bir program toplam register sayısından çok daha fazla veri kullanır.
+  - Örneğin devasa büyüklükteki array veri yapıları.
+- Bu nedenle register ile bellek arasında data transferi yapacak bellek komutlaına ihtiyaç vardır.
+  - Veri transferi komutları (Data transfer instructions).
+
+## MIPS Bellek Organizasyonu
+
+- Pek çok mimari byte adreslemeyi yetersiz bulduğundan "word" adı verilen bellek satırlarını kullanırlar.
+  - 32-bit, 48-bit, 64-bit...
+- MIPS 32-bit uzunluğundaki Word'ler için BYTE ADRESLEME kullanır.
+  - Adresler her zaman 4 sayısının katları şeklinde olacaktır.    
