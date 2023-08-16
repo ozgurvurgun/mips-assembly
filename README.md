@@ -232,3 +232,37 @@ addi  $s3, $s3, 4  # $s3'de bulunan değere 4 ekleyip $s3'e geri kaydeder.
   - 32-bit, 48-bit, 64-bit...
 - MIPS 32-bit uzunluğundaki Word'ler için BYTE ADRESLEME kullanır.
   - Adresler her zaman 4 sayısının katları şeklinde olacaktır.    
+
+## Veri Transfer Komutları
+
+- lw: (Load Word) Bellekten register'a veri transfer eder
+  - ```php
+    lw $s1 , 100($s2)  # $s1 = Bellek[$s2 + 100]
+    ``` 
+- sw: (Store Word) Register'dan belleğe veri transfer eder (Bellek yazma)    
+  - ```php
+    sw $s1 , 100($s2)  # Bellek[$s2 + 100] = $s1
+    ``` 
+    - C/C++ Kodu: a[9] = h + a[8]; 
+    - $s3 register'ı "a[0]" adresini tutsun, $s2 ise "h" parametresini tutsun
+    - ```php
+      MIPS Kodu:
+      
+      lw $t0, 32($s3)  # $st0 = a[8]
+      add $t0, $s2, $t0  # $t0 = h + a[8]
+      sw $t0, 36($s3)  # a[9] = h + a[8]
+      ```  
+
+## Özet
+
+- MIPS bir Load / Store Mimarisidir
+  - Byte adresleme ile bellekten okuma/yazma yapar
+  - Operand olarak register, tam sayı sabiti ve bellek verisi kullanabilir
+  - Bellek verisini önce veri transfer komutları ile register'a almak zorundadır
+  -   | Komut | Syntax                   | Anlamı                     |
+      |:-----:|:------------------------:|:--------------------------:|
+      | add   | add $source, $op1, $op2  | $src = $op1 + $op2         |
+      | addi  | addi $source, $op1, int  | $src = $op1 + int          |
+      | sub   | sub $source, $op1, $op2  | $src = $op1 - $op2         |
+      | lw    | lw $register, byte_adres | $reg = bellek[byte_adres]  |
+      | sw    | sw $register, byte_adres | bellek[byte_adres] = $reg  |                    
