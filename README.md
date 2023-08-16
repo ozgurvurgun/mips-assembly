@@ -223,7 +223,7 @@ addi  $s3, $s3, 4  # $s3'de bulunan değere 4 ekleyip $s3'e geri kaydeder.
 - Aritmetik / Mantık komutlarının operandları register'dan gelmek zorundadır.
 - Tipik bir program toplam register sayısından çok daha fazla veri kullanır.
   - Örneğin devasa büyüklükteki array veri yapıları.
-- Bu nedenle register ile bellek arasında data transferi yapacak bellek komutlaına ihtiyaç vardır.
+- Bu nedenle register ile bellek arasında data transferi yapacak bellek komutlarına ihtiyaç vardır.
   - Veri transferi komutları (Data transfer instructions).
 
 ## MIPS Bellek Organizasyonu
