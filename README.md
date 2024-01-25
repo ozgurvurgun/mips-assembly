@@ -272,7 +272,7 @@ addi  $s3, $s3, 4  # $s3'de bulunan değere 4 ekleyip $s3'e geri kaydeder.
   -   | İşlem | C Syntax  | MIPS  Karşılığı|
       |:-----:|:------------------------:|:--------------------------:|
       | AND   | &  | and, andi |
-      | OR    | | | or, ori   |
+      | OR    | \| | or, ori   |
       | XOR   | ^  | xor, xori |
       | NOT   | ~  | nor       |  
   - ```php
