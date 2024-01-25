@@ -288,9 +288,9 @@ addi  $s3, $s3, 4  # $s3'de bulunan değere 4 ekleyip $s3'e geri kaydeder.
 ## Bit Kaydırma (Shift)
   -   | Komut | Örnek  | Anlamı |
       |:-----:|:------------------------:|:---------:|
-      | sll  | sll \$t2, \$t3, 2    | \$t2 = \$t3 << 2   |
+      | sll  | sll  \$t2, \$t3, 2    | \$t2 = \$t3 << 2   |
       | sllv | sllv \$t3, \$t4, \$t5 | \$t3 = \$t4 << \$t5 |
-      | sra  | sra \$t4, \$t3, 1    | \$t4 = \$t3 >> 1   |
+      | sra  | sra  \$t4, \$t3, 1    | \$t4 = \$t3 >> 1   |
       | srav | srav \$t7, \$t2, \$t4 | \$t7 = \$t2 >> \$t4 | 
-      | srl  | srl \$t2, \$t3, 7    | \$t2 = \$t3 >> 7   |  
+      | srl  | srl  \$t2, \$t3, 7    | \$t2 = \$t3 >> 7   |  
       | srlv | srlv \$t3, \$t4, \$t6 | \$t3 = \$t4 >> \$t6 | 
