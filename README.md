@@ -137,7 +137,7 @@ Assembler
 - Assembly' de her satır kod tek bir komutun icra edilemsi içindir.
 - Birim zamanda (clock cycle) sadece 1 komut gerçekleştirilir.
 - C/C++ Kodu: a= b + c + d + e;
-($s0, $s1, $s2, $s3, $s4 register'ları sırasıyla A,B,C,D değerlerini içeriyor kabul edelim)
+(\$s0, \$s1, \$s2, \$s3, \$s4 register'ları sırasıyla A,B,C,D değerlerini içeriyor kabul edelim)
 ```php
 MIPS Kodu:
 add  $t0, $s1, $s2
@@ -165,29 +165,29 @@ add  $s0, $t1, $s4
     - 32-bit genişliğinde ki her Register satırına "Word" denir.
     - "Daha küçük daha hızlıdır" kuralı gereği 33 adet Register, 32 adet Register yapısına göre daha yavaştır.
     - RISC mimarileri donanımı olabildiğince basit tutmayı hedefler.
-    - Register "$" işareti ile tanımlanır.
+    - Register "\$" işareti ile tanımlanır.
     - Derleyiciler Register'ları kullanarak derleme işlemi yapar.
 
 | isim         | Adres Değeri   | Kullanım                                |
 |:------------:|:--------------:|:---------------------------------------:|
-| $zero        |  0             | Sabit 0 değeri                          |
-| $at          |  1             | Assembler için ayrılmıştır              |
-| $v0 - $v1    |  2-3           | Sub-routine sonuç register              |
-| $a0 - a3     |  4-7           | Sub-routine argümanlar                  |
-| $t0 - $t9    |  8-15 , 24-25  | Geçici işlem parametreleri (temporaries)|
-| $s0 - $s7    |  16-23         | Kaydedilmiş parametreler                |   
-| $k0 - $k1    |  26-27         | İşletim sistemi kernel için ayrılmıştır |
-| $gp          |  28            | Global pointer                          |
-| $sp          |  29            | Stack pointer                           |
-| $fp          |  30            | Frame pointer                           |
-| $ra          |  31            | Return address                          | 
+| \$zero        |  0             | Sabit 0 değeri                          |
+| \$at          |  1             | Assembler için ayrılmıştır              |
+| \$v0 - \$v1    |  2-3           | Sub-routine sonuç register              |
+| \$a0 - a3     |  4-7           | Sub-routine argümanlar                  |
+| \$t0 - \$t9    |  8-15 , 24-25  | Geçici işlem parametreleri (temporaries)|
+| \$s0 - \$s7    |  16-23         | Kaydedilmiş parametreler                |   
+| \$k0 - \$k1    |  26-27         | İşletim sistemi kernel için ayrılmıştır |
+| \$gp          |  28            | Global pointer                          |
+| \$sp          |  29            | Stack pointer                           |
+| \$fp          |  30            | Frame pointer                           |
+| \$ra          |  31            | Return address                          | 
 
 ## Toplama / Çıkarma Komutları 
 
 - add : operand1 ve operand2 parametrelerini toplayıp source parametresine yazar.
 - sub : operand1 ve operand2 parametrelerini çıkarıp source parametresine yazar.
 - örnek
-  - C/C++ Kodu: f = (g + h) - (i + j); ($s0, $s1, $s2, $s3, $s4 register'ları sırasıyla f,g,h,i,j değerlerini içeriyor kabul edelim)
+  - C/C++ Kodu: f = (g + h) - (i + j); (\$s0, \$s1, \$s2, \$s3, \$s4 register'ları sırasıyla f,g,h,i,j değerlerini içeriyor kabul edelim)
 ```php
 MIPS Kodu:
 add  $t0, $s1, $s2  # t0 = g + h
@@ -244,14 +244,15 @@ addi  $s3, $s3, 4  # $s3'de bulunan değere 4 ekleyip $s3'e geri kaydeder.
     sw $s1 , 100($s2)  # Bellek[$s2 + 100] = $s1
     ``` 
     - C/C++ Kodu: a[9] = h + a[8]; 
-    - $s3 register'ı "a[0]" adresini tutsun, $s2 ise "h" parametresini tutsun
+    - \$s3 register'ı "a[0]" adresini tutsun, \$s2 ise "h" parametresini tutsun
     - ```php
       MIPS Kodu:
       
-      lw $t0, 32($s3)  # $st0 = a[8]
+      lw  $t0, 32($s3)  # $st0 = a[8]
       add $t0, $s2, $t0  # $t0 = h + a[8]
-      sw $t0, 36($s3)  # a[9] = h + a[8]
-      ```  
+      sw  $t0, 36($s3)  # a[9] = h + a[8] 
+      ```
+
 
 ## Özet
 
@@ -261,8 +262,35 @@ addi  $s3, $s3, 4  # $s3'de bulunan değere 4 ekleyip $s3'e geri kaydeder.
   - Bellek verisini önce veri transfer komutları ile register'a almak zorundadır
   -   | Komut | Syntax                   | Anlamı                     |
       |:-----:|:------------------------:|:--------------------------:|
-      | add   | add $source, $op1, $op2  | $src = $op1 + $op2         |
-      | addi  | addi $source, $op1, int  | $src = $op1 + int          |
-      | sub   | sub $source, $op1, $op2  | $src = $op1 - $op2         |
-      | lw    | lw $register, byte_adres | $reg = bellek[byte_adres]  |
-      | sw    | sw $register, byte_adres | bellek[byte_adres] = $reg  |                    
+      | add   | add \$source, \$op1, \$op2  | \$src = \$op1 + \$op2         |
+      | addi  | addi \$source, \$op1, int  | \$src = \$op1 + int          |
+      | sub   | sub \$source, \$op1, \$op2  | \$src = \$op1 - \$op2         |
+      | lw    | lw \$register, byte_adres | \$reg = bellek[byte_adres]  |
+      | sw    | sw \$register, byte_adres | bellek[byte_adres] = \$reg  |     
+
+## MIPS MANTIK KOMUTLARI    
+  -   | İşlem | C Syntax  | MIPS  Karşılığı|
+      |:-----:|:------------------------:|:--------------------------:|
+      | AND   | &  | and, andi |
+      | OR    | \| | or, ori   |
+      | XOR   | ^  | xor, xori |
+      | NOT   | ~  | nor       |  
+  - ```php
+        and $t1, $t2, $t3 # $t1 = $t2 & $t3 (bitwise and)
+        or  $t1, $t2, $t3 # $t1 = $t2 | $t3 (bitwise or)
+        xor $t1, $t2, $t3 # $t1 = $t2 ^ $t3 (bitwise xor)
+
+        andi $t1, $t2, 0xF0 # $t1 = $t2 & 0xF0 (bitwise and)
+        ori  $t1, $t2, 0xFF # $t1 = $t2 | 0xFF (bitwise or)
+        xori $t1, $t2, 0x0F # $t1 = $t2 ^ 0x0F (bitwise xor)
+    ```           
+
+## Bit Kaydırma (Shift)
+  -   | Komut | Örnek  | Anlamı |
+      |:-----:|:------------------------:|:---------:|
+      | sll  | sll \$t2, \$t3, 2    | \$t2 = \$t3 << 2   |
+      | sllv | sllv \$t3, \$t4, \$t5 | \$t3 = \$t4 << \$t5 |
+      | sra  | sra \$t4, \$t3, 1    | \$t4 = \$t3 >> 1   |
+      | srav | srav \$t7, \$t2, \$t4 | \$t7 = \$t2 >> \$t4 | 
+      | srl  | srl \$t2, \$t3, 7    | \$t2 = \$t3 >> 7   |  
+      | srlv | srlv \$t3, \$t4, \$t6 | \$t3 = \$t4 >> \$t6 | 
