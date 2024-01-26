@@ -28,7 +28,7 @@
 Derleyici
 ↓↓↓↓↓↓↓↓↓
 ```
->Assembly Programlama (mips)
+>Assembly Programlama
 ```
  swap:
 muli $2, $5, 4
