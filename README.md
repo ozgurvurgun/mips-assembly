@@ -349,3 +349,107 @@ addi  $s3, $s3, 4  # $s3'de bulunan değere 4 ekleyip $s3'e geri kaydeder.
     mfhi $t1      # $t1 = HI
     mflo $t0      # $t0 = LO
     ```  
+
+## Koşullu, Koşulsuz Atlama
+  <p>
+  Bir bilgisayarı basit bir hesap makinesinden ayıran yegane şeylerden biri akışa göre programın davranışını değiştirebilmesi, belirli bir koşul sağlandığında veya sağlanmadığında normal çalışma akışını değiştirebilmesidir. Buna kısaca karar verme diyoruz. Bilgisayar mimarilerinde karar verme işlemi koşullu veya koşulsuz atlama komutları ile gerçekleştirilir.
+  </p>
+
+## Bilgisayarda Karar Verme ve Atlama
+- Üst düzey programlamada koşula bağlı olarak karar verme işlemi genellikle "if" ve "else" ile ifade edilir.
+- ```javascript
+   //Javascript Kodu
+   let x = 10;
+   let y = 20;
+   let result = 0;
+   if (x != y) result = x + y;
+   else result = x - y;
+  ``` 
+- Programlamada koşulsuz atlama genellikle "return" ile ifade edilir.
+   - ```php
+      return main();
+     ``` 
+
+## Program Sayacı (Program Counter)
+- Komutlar program belleğinde tutulur (ROM, RAM).
+  - Fetch. Decode, Execute
+- Program sayacı; şu anda execute edilen komutun adresini tutan özel bir işlemci register'idir.
+- Bellekten komut okuması yapabilmek için gerekli olan adres bilgisi Program Sayacı Register'indan alınır.
+- Komut Fetch edilir edilmez Program Sayacının değeri +1 artar. Böylece yeni fetch edilecek komutun adresi hesaplanmış olur.
+- Program bittiğinde veya bilgisayar kapatıldığında Program Sayacı genellikle 0 değerine döner.
+- | MIPS Bellek Organizasyonu|
+  |:------------:|
+  | STACK        |
+  | HEAP         | 
+  | STATİC DATA  |
+  | INSTRUCTIONS |
+
+## Karar Verme
+
+- Program sayacının normalde +1 olarak artarak ilerleyen seyrini bir koşula bağlı veya bağlı olmadan değiştirmektir.
+  - Böylece ilgili duruma göre programın belirli kısımları çalışmış olur.
+- koşullu komutlar "branch" olarak adlandırılır.
+- Koşulsuz komutlar jump olarak adlandırılır.
+- "Target" ise program sayacının alacağı değeri, yani program akışında atlanacak hedef lokasyonu temsil eder.
+
+## Etiketler (LABEL)
+
+- Bellekteki bir lokasyonu "string" olarak isimlendirmek için kullanılır.
+
+## Koşullu Atlama
+- Branch Equal (Eşitse Atla)
+  - beq
+    - ```php
+        beq $t1, $t2, label1 
+        # $t1 içeriği $t2'ye eşitse label1 konumuna atla
+      ```
+- Branch Not Equal (Eşit Değilse Atla)
+  - bne
+    - ```php
+        bne $t1, $t2, label1
+        # $t1 içeriği $t2' ye eşit değilse label1 konumuna atla  
+      ```
+- Set On less Than (Küçükse atama yap)
+    - slt, sltu
+      - ```php
+          slt $s1, $s2, $s3 
+          # $s2 < $s3 => $s1 = 1, değilse $s1 = 0
+        ```
+- Set On Less Than Immediate (Sayıdan küçükse atama yap)
+    - slti, sltiu
+      - ```php
+          slti $s1, $s2, 100 
+          # $s2 < 100 => $s1 = 1, değilse $s1 = 0
+        ```
+- MIPS mimarisinde doğrudan, küçükse atla büyükse atla gibi komutlar söz konusu değildir. Mimari yaklaşımı gereği bu komutlar komut setine dahil edilmemiştir.
+- Koşullu atlama ihtiyacını "slt" komutu yardımıyla gerçekleştiriyoruz.
+  - ```php
+      slti $t0, $a0, 1  # $s2 < 100 => $s1 = 1, değilse $s1 = 0
+      beq $t0, $zero, L1 # $t0 = 0 ise L1'e atla ($a0 >= kontrolü sağlanmış oldu)
+    ```  
+
+## Koşulsuz Atlama
+- Jump (Atla)
+  - j
+    - ```php
+      j label1 #label1 konuma atla
+      ``` 
+## Döngüler
+- For loop örneği
+  - ```php
+      //C Kodu
+      for(i=0; i < 10; i++){
+        a = a + i;
+      }
+
+      //Assembly Kodu
+      //s0 = i; s1 = a; t0 = temp; olduğunu varsayalım
+              addi $s0, $zero, 0
+              addi $t0, $zero, 10
+      Loop:   beq  $s0, $t0, Exit
+              add  $s1, $s1, $s0
+              addi $s0, $s0, 1
+              j    Loop
+      
+      Exit:   ...
+    ```
