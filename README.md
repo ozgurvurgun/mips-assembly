@@ -286,6 +286,14 @@ addi  $s3, $s3, 4  # $s3'de bulunan değere 4 ekleyip $s3'e geri kaydeder.
     ```           
 
 ## Bit Kaydırma (Shift)
+  - Shift işlemi adındanda anlaşılacağı üzere kaydırma demektir. Bilgisayar dünyasında shift, bir sayının bitlerini sağa veya sola kaydırmayı ifade eder. Kısaca binary shift işlemi yaptığımzda sayıyı basamak değeri kadar katlamış veya bölmüş oluruz.
+  - Sola her birim shift etmek sayıyı 2 ile çarpmak anlamına gelir.
+  - Sağa her birim shift etmek sayıyı 2 ile bölmek anlamına gelir.
+  - İki tür shift işlemi vardır. "Aritmetik" ve "Logic" shift. Bunların farkı, kaydırma sırasında bit genişliğinden taşan bitlerin yerine yazılacak değerlerin farklı olmasıdır.
+  - Sola logic shift yapıldığında en düşük anlamlı bite(LSB) 0 yazılır.
+  - Sağa logic shift yapıldığında en yüksek anlamlı bite(MSB) 0 yazılır.
+  - Sola aritmetik shift yapıldığında en düşük anlamlı bite(LSB) 0 yazılır.
+  - Sağa aritmetik shift yapıldığında en yüksek anlamlı bite(MSB) sayının işaretine göre 1 veya 0 yazılır.
   -   | Komut | Örnek  | Anlamı |
       |:-----:|:------------------------:|:---------:|
       | sll  | sll  $t2, $t3, 2    | $t2 = $t3 << 2   |
@@ -294,3 +302,50 @@ addi  $s3, $s3, 4  # $s3'de bulunan değere 4 ekleyip $s3'e geri kaydeder.
       | srav | srav $t7, $t2, $t4 | $t7 = $t2 >> $t4 | 
       | srl  | srl  $t2, $t3, 7    | $t2 = $t3 >> 7   |  
       | srlv | srlv $t3, $t4, $t6 | $t3 = $t4 >> $t6 | 
+
+## Aritmetic Logic Unit (ALU) 
+
+  - Aga tamam biz bu assembly ile aritmetik işlemler yaptık mantık kapıları ile programlama falan yaptık fakat bunlar işlemcide nasıl çalışıyor ?
+    - Bu sorunun cevabı artimetic logic unit' dir. Bu nihayetinde işlemci de bulunan bir devreden başka bir şey değildir. Neredeyse bütün aritmetik, mantık, adres hesaplama, atlama kontrolü gibi işlemler bu birimde gerçekleşir
+    - ALU içinde ki her bir operasyonun bir kimlik kodu bulunur.
+    - | ALU Operasyonu | Fonksiyon  |
+      |:-----:|:------------------:|
+      | 0000  | and              |
+      | 0001  | or               | 
+      | 0010  | add              |
+      | 0110  | subtract         | 
+      | 0111  | Set on less than | 
+      | 1100  | NOR              |
+
+## MIPS Çarpma Komutları
+#### MDU Birimi
+- Çarpma bölme işlemleri bilgisayar açısından oldukça maliyetli işlemlerdir peşi sıra birbirini takip etmesi gereken bir çok işlem bulunur. Bu sebepten bu işlemleri farklı bir birime alarak (MDU) ALU nun hantallaşmasının önüne geçilmek istenmiştir.
+- MDU birimi, sonuçları HI ve LO adında iki farklı registerda tutar.
+- İki adet 32-bit sayının çarpımı 64-bit uzunluğunda sonuç verir. MIPS'e ait tüm kaynak ve hedef operandları 32-bit olduğundan çarpma işleminin 64-bit sonucunu saklamak için 2 adet registera ihtiyacı vardır.
+  - HI registeri yüksek anlamlı 32-bit kısmı tutarken LO registeri düşük anlamlı 32-bit kısmını tutar
+- İki adet çarpma komutu bulunur: "mult" ve "multu". "multu" sayının işaretsiz sayılar içindir.
+- Çarpım sonucunu istenen registerlara almak için iki adet komut çalıştırmak gerekir.
+  - mflo: LO resgiter'inda bulunan datayı alır.
+  - mfhi: HI resgiter'inda bulunan datayı alır.
+- Örnek:
+  - ```php
+    mult $s2, $s3  # (HI, LO) = $s2 * $s3
+    mfhi $t1       # $t1 = HI
+    mflo $t0       # $t0 = LO
+    ```
+## MIPS Bölme Komutları
+#### MDU Birimi
+
+- Bir bölme işleminin sonucu bölüm ve kalan olarak iki kısımda elde edilir. Eğer sadece bölüm kısmını saklarsak sayıyı yuvarlamış oluruz, tam değeri elde edemeyiz. MIPS'te bölme komutu sonrasında hem bölüm hem de kalan kısımlarını ayrı şekilde işlememiz gerekir.
+  - Çarpmada ki aynı HI ve LO 32-bit registerlar kullanılır.
+- İki adet bölme komutu bulunur. "div" ve "divu" .
+- Bölüm ve kalanı registerlara almak için iki adet komut çalıştırmak gerekir.
+  - mflo: LO registerda ki bulunan datayı alır.
+  - mfhi: HI registerda ki bulunan datayı alır.
+- Örnek:
+  - ```php
+    div $s2, $s3  # LO = $s2 / $s3 (bölüm)
+                  # HI = $s2 % $s3 (kalan)
+    mfhi $t1      # $t1 = HI
+    mflo $t0      # $t0 = LO
+    ```  
