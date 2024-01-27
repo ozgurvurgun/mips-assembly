@@ -435,6 +435,8 @@ addi  $s3, $s3, 4  # $s3'de bulunan değere 4 ekleyip $s3'e geri kaydeder.
       j label1 #label1 konuma atla
       ``` 
 ## Döngüler
+- Assembly de while, for... gibi özel döngü kurabileceğimiz komutlar bulunmaz. Bunları kendimiz kurgulamalıyız. Label'lar ve koşul yapıları ile üst seviye dillerde da bulunan döngü sistemlerinin tamamını kurgulamak mümkündür.
+- Assembly de ki döngüleri, üst seviye programlama dillerinde kurguladığımız öz yinelemeli fonkisyonlar gibi düşünebilirsiniz.
 - For loop örneği
   - ```php
       //C Kodu
@@ -453,3 +455,38 @@ addi  $s3, $s3, 4  # $s3'de bulunan değere 4 ekleyip $s3'e geri kaydeder.
       
       Exit:   ...
     ```
+## Prosedürler (Sub-Routine)
+- Özel bir işi yerine getirmek için kullanılan alt programlardır.
+- Kendilerine tanımlanan parametreleri işleyerek sonuç üretirler.
+- Kompleks problemleri parçalara ayırıp çözemeye olanak tanır(Divide & Conquer)
+- Prosedür sadece tanımlandığı işi yapabilir. Program akışında dilendiği kadar çağırılıp kullanılabilir.
+
+## Bir Sub Routine Çalıştırmak için
+ 
+  1. Kullanılacak parametreler prosedürün ulaşabileceği bir noktaya yerleştirilir.
+  2. Programın prosedüre transferi kontrol edilir.
+  3. Prosedür için gereken hafıza kaynakları oluşturulur.
+  4. İstenilen görev gerçekleştirilir.
+  5. Sonuçlar, çağıran programın erişebileceği bir noktada hafızaya alınır.
+  6. Çağıran programın sonuçları kaydedilen yapıdan okuması ve kontrolü tekrar eline alması sağlanır. 
+
+## Sub Routine Parametrelerinin Kaydedilmesi
+  - Registerlar en hızlı veri kayıt yapılarıdır. Prosedürlere özel registerlar şunlarıdr:
+    1. $a0 - $a3: Kullanılacak parametreler için dört adet argüman registeri
+    2. $v0 - $v1: Döndürülen değerler(return parameters) için iki adet değer registeri
+    3. $ra: Return Address Register (programın orijinal noktasına geri dönebilmek için)
+  - Komut: jump-and-link (jal)
+    - ```php
+        jal Prosedür Adı
+      ``` 
+  - Bu komut prosedür adresine atlar, aynı zamanda takip eden komutun adresini $ra' ya kaydeder.
+  - $ra register'ina kaydedilen return adres = "PC + 4" değeridir.
+  - her prosedürün sonunda bulunan "jr $ra" komutu ile $ra' da belirtilen dönüş adresine koşulsuz atlama yapılır.   
+
+## Prosedür Çağrılması Özet
+
+  1. Çağıran program argümanları $a0 - $a3 içerisine koyar ve jal A ile sub routine A'ya atlanır.
+    - jal komutu PC+4 değerini sub routine'den dönüş için $ra register'inde saklar.
+  2. Prosedür görevini tamamlar, sonuçları $v0  - $v1 içerisini atar ve jr $ra komutunu çalıştırır.
+    - "jr $ra" komutu ile $ra'da saklanan "return" adrese geri dönülebilir.
+  - Tüm bu kayıt işlemleri belleğin "Stack" adı verilen özel bölümünde gerçekleşir.     
