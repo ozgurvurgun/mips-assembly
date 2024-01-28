@@ -538,25 +538,25 @@ addi  $s3, $s3, 4  # $s3'de bulunan değere 4 ekleyip $s3'e geri kaydeder.
   - <table>
       <tr>
         <td align="center"> 
-          <h5>Stack</h5>
+          <p>Stack</p>
           <p align="center">&darr;</p>
           <p align="center">&uarr;</p>
-          <h5>Dynamic Data</h5>
+          <p>Dynamic Data</p>
         </td>
       </tr>
       <tr>
         <td align="center"> 
-          <h5>Static Data</h5> 
+          <p>Static Data</p> 
         </td>
       </tr>
       <tr>
         <td align="center"> 
-          <h5>Text</h5> 
+          <p>Text</p> 
         </td>
       </tr>
       <tr>
         <td align="center"> 
-          <h5>Reserved</h5> 
+          <p>Reserved</p> 
         </td>
       </tr>
     </table> 
