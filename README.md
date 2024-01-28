@@ -489,4 +489,100 @@ addi  $s3, $s3, 4  # $s3'de bulunan değere 4 ekleyip $s3'e geri kaydeder.
     - jal komutu PC+4 değerini sub routine'den dönüş için $ra register'inde saklar.
   2. Prosedür görevini tamamlar, sonuçları $v0  - $v1 içerisini atar ve jr $ra komutunu çalıştırır.
     - "jr $ra" komutu ile $ra'da saklanan "return" adrese geri dönülebilir.
-  - Tüm bu kayıt işlemleri belleğin "Stack" adı verilen özel bölümünde gerçekleşir.     
+  - Tüm bu kayıt işlemleri belleğin "Stack" adı verilen özel bölümünde gerçekleşir.
+
+## Bellek Organizasyonu (Memory Allocation)
+
+<table>
+  <tr>
+    <td align="center"> Reserved </td>
+    <td align="center" rowspan="4"> Kernel Level </td>
+  </tr>
+  <tr>
+    <td align="center"> Memory Mapped IO </td>
+  </tr>
+  <tr>
+    <td align="center"> Kernel Data </td>
+  </tr>
+  <tr>
+    <td align="center"> Kernel Text </td>
+  </tr>
+  <tr>
+    <td align="center"> Stack Segment </td>
+        <td align="center" rowspan="5"> User Level </td>
+  </tr>
+  <tr>
+    <td>
+      <h1 align="center">&darr;</h1>
+      <h1 align="center">&uarr;</h1>
+     </td>
+  </tr>
+  <tr>
+    <td align="center"> Dynamic Data </td>
+  </tr>
+  <tr>
+    <td align="center"> Static Data </td>
+  </tr>
+  <tr>
+    <td align="center"> Text Segment </td>
+  </tr>
+  <tr>
+    <td align="center"> Reserved </td>
+    <td align="center"> Kernel Level </td>
+  </tr>
+</table>
+
+<br />
+
+- User level
+  - <table>
+      <tr>
+        <td align="center"> 
+          <h5>Stack</h5>
+          <h4 align="center">&darr;</h4>
+          <h4 align="center">&uarr;</h4>
+          <h5>Dynamic Data</h5>
+        </td>
+      </tr>
+      <tr>
+        <td align="center"> 
+          <h5>Static Data</h5> 
+        </td>
+      </tr>
+      <tr>
+        <td align="center"> 
+          <h5>Text</h5> 
+        </td>
+      </tr>
+      <tr>
+        <td align="center"> 
+          <h5>Reserved</h5> 
+        </td>
+      </tr>
+    </table> 
+
+- Mimaride ki bellek iki ana kısımdan oluşur, "Kernel" seviyesi ve "Kullanıcı" seviyesi.
+
+- Kernel bir çekirdek programıdır. İşletim sisteminin çalışması için gerekli olan temel verilerden oluşur.
+
+- Kullanıcı seviyesinde ki bellekte sırasıyla  { Stack, Dynamic Data }, Static Data, Text, Reserved kısımları bulunur. 
+  - Kısımları aşağıdan yukarıya doğru inceleyecek olursak.
+    - Text kısmında program sayacı bulunur. Bu da demek oluyor ki bu kısımda komutlar saklanıyor. yazdığımız programlar mimariye uygun olarak makine koduna çevrilerek Text kısmında saklanıyor.
+    - Static Data kısmının işaretçisi global pointer'dir (gp). bu kısımda programa ait global veriler yani tüm modüllerin erişebileceği veriler saklanıyor.
+    - Dynamic Data ve Stack kısmı Runtime Memory Allocation veya Dynamic Memory Allocation alanı olarak adlandırılır. Bunun anlamı programdan önce değil. Program çalıştığı esnada programın gerekliliklerine göre bu kısımlardan gerekli bellek bölgesi ayrılmasıdır. Bu bellek alanının tahsis mikarı önceden belirlenmiş değildir program çalıştığı esnada ihtiyaca göre alan tahsis edilir. Bu işleme "Dynamic Memory Allocation" denir.
+    - Dynamic Data bölgesinin elemanları Stack ve Heap olarak geçer. Heap kısaca programın belleğidir, store komutları ile register'da ki verileri belleğe kaydettiğimizde bu veriler dynamic data bölgesinde ki heap kısmında kayıt edilir. Stack bölgesi ise tamamen sub routine ler ve prosedürler ile alakalıdır. Prosedür parametrelerini ve atlamalar sırasında ki return adresleri zincirlerini kaydeden, sub routine' in gerçekleşmesini sağlayan bölge stack bölgesidir.
+
+## Stack
+- Stack programın çalışması boyunca çağrılan fonksiyonların yani prosedür ve sub routine' lerin doğru çalışması için gerekli olan prosedüre gidecek olan parametrelerin, return adresinin ve prosedür çalışması sırasında değerini kaybetmemesi gereken, bittikten sonra tekrar eski haline dönmesi gereken register değerlerinin saklanmasından sorumludur.
+- Stack Pointer
+  - Stack pointer stack belleğine ait veri satırlarının adreslerini tutan yapıdır.
+  - Stack pointer ($sp) stack'e en son eklenen verinin adresini tutar.
+  - Upside-down yapıdadır.
+  - Stack içerisinde ki pop veya push işlemlerinin hangi lokasyonda gerçekleşeceğini belirler.
+
+## Neden Dinamik Bellek Tahsisi Yapılır ?
+- Programın ne kadar belleğe ihtiyacı olduğunu onu çalıştırmadan bilemeyiz.
+- Bağlı liste, Sözlük gibi veri yapılarını sınırlayan bir yapı istemeyiz, bunların dinamik, genişletibilir olmasını isteriz. Çünkü bu veri yapılarının var olma amacı belli bir üst limiti olmamasıdır. Teoride ki bu sınırsız üst limiti sağlayan sağlayan sistem dynamic memory allocation dur.
+- Bellek İsrafını önlemek.
+- Sadece basit adres manipülasyonları ile yapılabilir. Statik olarak bellekten veri ayırmak, bu lokasyonlara silme, taşıma, ekleme, takas yapmak gibi işlemler doğrudan veri taşıma ile yapılması gerektiğinden çok daha fazla kaynak tüketir.
+- Object Oriented Programlama için şarttır. Structure , Class gibi obje tabanlı programlamada dynamic memory allocation zorunluluktur. Çünkü bu yapılara eklenebilecek verilerin ve fonksiyonların teoride bir sınırı olmaması gerekir.
