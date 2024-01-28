@@ -513,8 +513,8 @@ addi  $s3, $s3, 4  # $s3'de bulunan değere 4 ekleyip $s3'e geri kaydeder.
   </tr>
   <tr>
     <td>
-      <h2 align="center">&darr;</h2>
-      <h2 align="center">&uarr;</h2>
+      <p align="center">&darr;</p>
+      <p align="center">&uarr;</p>
      </td>
   </tr>
   <tr>
@@ -539,8 +539,8 @@ addi  $s3, $s3, 4  # $s3'de bulunan değere 4 ekleyip $s3'e geri kaydeder.
       <tr>
         <td align="center"> 
           <h5>Stack</h5>
-          <h4 align="center">&darr;</h4>
-          <h4 align="center">&uarr;</h4>
+          <p align="center">&darr;</p>
+          <p align="center">&uarr;</p>
           <h5>Dynamic Data</h5>
         </td>
       </tr>
