@@ -513,8 +513,8 @@ addi  $s3, $s3, 4  # $s3'de bulunan değere 4 ekleyip $s3'e geri kaydeder.
   </tr>
   <tr>
     <td>
-      <h2 align="center">&darr;</h2>
-      <h2 align="center">&uarr;</h2>
+      <h4 align="center">&darr;</h4>
+      <h4 align="center">&uarr;</h4>
      </td>
   </tr>
   <tr>
