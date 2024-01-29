@@ -704,7 +704,7 @@ addi  $s3, $s3, 4  # $s3'de bulunan değere 4 ekleyip $s3'e geri kaydeder.
     | j    | 000010 | label  | pc += i << 2               | 
     | jal  | 000011 | label  | $31 = pc; pc += i << 2     |
     | jalr | 001001 | labelR | $31 = pc; pc = $s          |
-    | jr   | 001000 | labelr | pc = $s                    | 
+    | jr   | 001000 | labelR | pc = $s                    | 
 
 - j label1
   - label1 ile temsil edilen adres 4194340 ise;
