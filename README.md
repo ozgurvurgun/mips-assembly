@@ -611,7 +611,7 @@ addi  $s3, $s3, 4  # $s3'de bulunan değere 4 ekleyip $s3'e geri kaydeder.
     add  $v0, $s0, $zero // $v0 = $s0 + 0 (return f)
     lw   $s0, 0($sp)     // restore $s0
     addi $sp, $sp, 4     // 1 eleman sil
-    jr   $ra             // jumbp back
+    jr   $ra             // jump back
 ```
 
 ## Komutların Yapısı , Makine Komutu Organizasyonu
