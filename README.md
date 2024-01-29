@@ -578,7 +578,7 @@ addi  $s3, $s3, 4  # $s3'de bulunan değere 4 ekleyip $s3'e geri kaydeder.
   - Stack pointer stack belleğine ait veri satırlarının adreslerini tutan yapıdır.
   - Stack pointer ($sp) stack'e en son eklenen verinin adresini tutar.
   - Upside-down yapıdadır.
-  - Stack içerisinde ki pop veya push işlemlerinin hangi lokasyonda gerçekleşeceğini belirler.
+  - Stack içerisinde ki pop(+4) veya push(-4) işlemlerinin hangi lokasyonda gerçekleşeceğini belirler.
 
 ## Neden Dinamik Bellek Tahsisi Yapılır ?
 - Programın ne kadar belleğe ihtiyacı olduğunu onu çalıştırmadan bilemeyiz.
@@ -586,3 +586,128 @@ addi  $s3, $s3, 4  # $s3'de bulunan değere 4 ekleyip $s3'e geri kaydeder.
 - Bellek İsrafını önlemek.
 - Sadece basit adres manipülasyonları ile yapılabilir. Statik olarak bellekten veri ayırmak, bu lokasyonlara silme, taşıma, ekleme, takas yapmak gibi işlemler doğrudan veri taşıma ile yapılması gerektiğinden çok daha fazla kaynak tüketir.
 - Object Oriented Programlama için şarttır. Structure , Class gibi obje tabanlı programlamada dynamic memory allocation zorunluluktur. Çünkü bu yapılara eklenebilecek verilerin ve fonksiyonların teoride bir sınırı olmaması gerekir.
+
+
+## Sub Routine Örneği
+```php
+  # C Kodu:
+  int example_funct(int g, int h, int i, int j)
+  {
+    int f;
+    f = (g+h) - (i+j);
+    return f;
+  }
+
+  // g, h, i, j -> $a0, $a1, $a2, $a3
+  // f -> $s0
+
+  # Assembly Kodu:
+  example_funct:
+    addi $sp, $sp, -4    // stack'de 1 elemanlık yer aç
+    sw   $s0, 0($sp)     // $s0 registerini kaydet
+    add  $t0, $a0, $a1   // $t0 = g+h
+    add  $t1, $a2, $a3   // $t1 = i+j
+    sub  $s0, $t0, $t1   // $s0 = $t0 - $t1
+    add  $v0, $s0, $zero // $v0 = $s0 + 0 (return f)
+    lw   $s0, 0($sp)     // restore $s0
+    addi $sp, $sp, 4     // 1 eleman sil
+    jr   $ra             // jumbp back
+```
+
+## Komutların Yapısı , Makine Komutu Organizasyonu
+
+### RISC Komut Formatı
+
+| op    | rs    | rt    | rd    | shamt | funct |
+|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
+| 6-bit | 5-bit | 5-bit | 5-bit | 5-bit | 6-bit |
+
+- Hatırlatma! Mips mimarisinde komutlar 32-bit uzunluğundadır. 
+- op: opcode
+  - Komutun tipini gösterir. Komutun hangi formatta olduğunu sadece opcode'a bakarak anlayabiliriz, kısacası komutun kimliğidir diyebiliriz. Örneğin komutun bütün operandları sadece registerdan oluşuyorsa komutun opcode'u "000000" şeklinde olur
+- funct: komuta ait tanımlayıcı
+  - Bazen opcode komutun kimliğini tek başına belirtmeye yetmez. Böyle durumlarda funct kısmı komutun kimliğini tam ve eksiksiz olarak belirtir.
+- rs: Birinci operand register (source register)
+- rt: İkinci operand register (target register)
+- rd: Üçüncü operand register (destination register)
+- shamt: Shift amount (kaydırma miktarı)
+  - shift komutlarında kullanılır. Kaydırmanın ne kadar olacağı bilgisi bu bölümde saklanır.
+- Bir komut yazdığımızda komutun kimliği yani hangi komut olduğu ona verilen registerlar, tam sayılar, adresler, ekstra parametreler, kısacası komutu oluşturan bütün verileri 32-bit içerisinde paketliyoruz.
+- Makine kodu dediğimiz şey aslında bu formatta paketlenmiş 1 ve 0 lardır. Bu binary kodu deşifre ederek komutu oldukça kolay okuyabiliriz. Yani makine koduna bakıp yazılımı anlayabiliriz. 
+- Yazılım ile işlemci aynı dilden konuşmalıdır. Yani aynı komut seti mimarisine sahip olmalıdırlar. Aksi durumda komutlar decode edilemez ve hali ile yazılım yürütülemez.
+
+## Komut Formatı Tipleri
+### I, R ve J Tip Komutları
+- R Formatı: Tüm operandları register olan komutlar ve shift komutları.
+  - opcode her zaman "000000".
+  - Komutun kimliğini "funct" belirler.
+- I Formatı: Load, Store, Branch ve Immediate. komutları.
+- J Formatı: Jumo ve Call komutları.
+
+
+## R-Tipi Komutlar (register komutları)
+- ```php
+      target  destination
+        ↑         ↑
+   add $t0, $s2, $t0 
+             ↓
+          source
+  ```
+- | 000000 | 10010 | 01000 | 01000 | 00000 | 100000 |
+  |:-----:|:-----:|:-----:|:-----:|:-----: |:-----: |
+  | 6-bit | 5-bit | 5-bit | 5-bit | 5-bit  | 6-bit  |
+
+- Aritmetic and Logical Instructions
+  - | Instruction | Opcode/Function | Syntax | Operation         |
+    |:----------: |:---------------:| :-----:| :---------------: |
+    | add   | 100000 | f $d, $s, $t | $d = $s + $t               | 
+    | addu  | 100001 | f $d, $s, $t | $d = $s + $t               |
+    | addi  | 001000 | f $d, $s, i  | $d = $s + SE(İ)            |
+    | addiu | 001001 | f $d, $s, i  | $d = $s + SE(İ)            |  
+    | and   | 100100 | f $d, $s, $t | $d = $s & $t               |
+    | andi  | 001100 | f $d, $s, i  | $t = $s & ZE(İ)            |
+    | div   | 011010 | f $s, $t     | lo = $s / $t; hi = $s % $t |
+    | divu  | 011011 | f $s, $t     | lo = $s / $t; hi = $s % $t |
+    | mult  | 011000 | f $s, $t     | hi:lo = $s * $t            |
+    | multu | 011001 | f $s, $t     | hi:lo = $s * $t            |
+
+
+## I-Tipi Komutlar (veri transfer komutları)
+- | op    | rs    | rt    | adsress |
+  |:-----:|:-----:|:-----:|:------: |
+  | 6-bit | 5-bit | 5-bit | 16-bit  |
+
+- ```php
+  lw $t0, 200($s2)
+  ```
+
+  - | 35    | 18    | 8     | 200     |
+    |:-----:|:-----:|:-----:|:------: |
+    | op    | rs    | rt    | address |
+
+-  ```php
+   addi $sp, $sp, 4
+   ```
+  - | 001000 | 11101 | 11101 | 0000000000000100 |
+    |:------:|:-----:|:-----:|:---------------: |
+    |   op   |  rs   |  rt   |     address      |
+
+
+## J-Tipi Komutlar (atlama komtları)
+- | op    | adsress |
+  |:-----:|:-------:|
+  | 6-bit | 26-bit  |
+
+- Jump Instructions
+  - | Instruction | Opcode/Function | Syntax | Operation  |
+    |:----------: |:---------------:| :-----:| :--------: |
+    | j    | 000010 | label  | pc += i << 2               | 
+    | jal  | 000011 | label  | $31 = pc; pc += i << 2     |
+    | jalr | 001001 | labelR | $31 = pc; pc = $s          |
+    | jr   | 001000 | labelr | pc = $s                    | 
+
+- j label1
+  - label1 ile temsil edilen adres 4194340 ise;
+  - | 000010 | 00000100000000000000001001 |
+    |:------:|:-------------------------: |
+    | 6-bit  | 26-bit  |
