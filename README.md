@@ -693,7 +693,7 @@ addi  $s3, $s3, 4  # $s3'de bulunan değere 4 ekleyip $s3'e geri kaydeder.
     |   op   |  rs   |  rt   |     address      |
 
 
-## J-Tipi Komutlar (atlama komtları)
+## J-Tipi Komutlar (atlama komutları)
 - | op    | adsress |
   |:-----:|:-------:|
   | 6-bit | 26-bit  |
