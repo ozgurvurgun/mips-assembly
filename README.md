@@ -716,3 +716,67 @@ addi  $s3, $s3, 4  # $s3'de bulunan değere 4 ekleyip $s3'e geri kaydeder.
 ## Bilgisayar Veri Yolu ve Pipelining
 
 <img src="images/mips-hardware.png" width="100%" />
+
+## Pipelining
+- Komutların üst üste işlenmesi ve tüm veri yolu elemanlarının paralel olarak aktif kullanılması tekniğidir.
+- Performansı arttırmak için sık kullanılan tekniklerden biridir.
+- Pipeline veri yolunda;
+  1. Ardışık komutların adımları farklı veri yolu bölümlerinde işlenir.
+  2. Veri yolu elemanları paralel çalışır.
+  3. Bölümler daha efektif kullanılmış olur.  
+
+## Pipeline vs Standart Sistem
+<img src="images/pipeline-examp.png" width="100%" />
+
+## MIPS ile Pipelining
+- Latency aydınır, Throughput artar.
+  - Latency: Bir komutun işlenmesi için gereken toplam süre.
+  - Throughput: Belirli zaman aralığında işlenen toplam komut sayısı.
+- MIPS'in pipelining dostu özellikleri
+  - Aynı uzunluktaki komutlar
+  - Çok az sayıdaki komut formatı (I, R, J)
+
+## Pipeline Tehlikeleri
+- Yapısal Tehlikeler:
+  - Donanım aynı clock cycle' da tüm komut kombinasyonlarını kaldıramayabilir.
+  - Veriler ve komutlar aynı bellektedir.
+- Kontrol Tehlikesi:
+  - Branch komutlarının program akışını değiştirebilmesi.
+- Veri Tehlikesi:
+  - Bir komut, önceki bir komuttan gelen veriye bağımlı olabilir.
+  - İşlenen komutun kullanabileceği veri, henüz hesaplanmamış olabilir.
+
+## Yapısal Tehlikeler
+- Aslında bu kısım için pekte yapılacak bir şey yoktur donanımın tasarımından kaynaklı oluşabilecek problemlerdir.
+
+## Kontrol Tehlikeleri
+<img src="images/branch-problem.png" width="100%" />
+<br />
+<hr />
+<br />
+<img src="images/branch-problem-solution-1.png" width="100%" />
+<br />
+<hr />
+<br />
+<img src="images/branch-problem-solution-2.png" width="100%" />
+
+## Veri Tehlikeleri (Data Hazard)
+- Bir komutun işlenmesi, hala pipeline'da bulunan önceki bir komutun işlediği veriye bağlıysa oluşur.
+- Örnek:
+  - ```php
+      add $s0, $t0, $t1
+      sub $t2, $s0, $t3
+    ```
+- Bu durum için data dependency terimi sık kullanılır.
+- Normalde bu tip bir durum, pipeline'da çoklu beklemelere sebep olur. (WB bitene kadar 5 clock cycle)    
+
+<hr />
+
+<img src="images/data-hazard-solutions.png" width="100%" />
+<br />
+<hr />
+<br />
+<img src="images/forwardinf-solution.png" width="100%" />
+
+## Pipeline Veri Tehlikelerinden Kaçınma
+<img src="images/protecting-yourself-from-pipeline-data-hazards.png" width="100%" />
