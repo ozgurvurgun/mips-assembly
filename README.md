@@ -711,3 +711,8 @@ addi  $s3, $s3, 4  # $s3'de bulunan değere 4 ekleyip $s3'e geri kaydeder.
   - | 000010 | 00000100000000000000001001 |
     |:------:|:-------------------------: |
     | 6-bit  | 26-bit  |
+
+
+## Bilgisayar Veri Yolu ve Pipelining
+
+<img src="images/mips-hardware.png" width="700" />
