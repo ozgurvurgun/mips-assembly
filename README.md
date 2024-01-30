@@ -715,4 +715,4 @@ addi  $s3, $s3, 4  # $s3'de bulunan değere 4 ekleyip $s3'e geri kaydeder.
 
 ## Bilgisayar Veri Yolu ve Pipelining
 
-<img src="images/mips-hardware.png" width="700" />
+<img src="images/mips-hardware.png" width="100%" />
